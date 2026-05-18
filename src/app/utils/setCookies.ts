@@ -1,0 +1,25 @@
+import type { Response } from "express";
+
+interface IToken {
+  accessToken?: string;
+  refreshToken?: string;
+}
+
+export const setCookieAuth = (res: Response, token: IToken) => {
+  if (token.accessToken) {
+    res.cookie("accessToken", token.accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+  }
+
+  if (token.refreshToken) {
+    res.cookie("refreshToken", token.refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      // maxAge: 7 * 24 * 60 * 60 * 1000, // this will not vanish even close the browser
+    });
+  }
+};

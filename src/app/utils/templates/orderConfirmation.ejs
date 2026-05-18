@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Confirmation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      background: #fff;
+      margin: 30px auto;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .header {
+      text-align: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+    }
+    .header h2 {
+      margin: 0;
+      color: #333;
+    }
+    .info {
+      margin: 20px 0;
+    }
+    .info p {
+      margin: 5px 0;
+      color: #555;
+    }
+    .order-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    .order-table th, .order-table td {
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    .order-table th {
+      background: #fafafa;
+    }
+    .total {
+      text-align: right;
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .footer {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="header">
+    <h2>🎉 Order Confirmed!</h2>
+    <p>Thank you for your purchase</p>
+  </div>
+
+  <div class="info">
+    <p><strong>Order ID:</strong> <%= order._id %></p>
+    <p><strong>Name:</strong> <%= user.name %></p>
+    <p><strong>Email:</strong> <%= user.email %></p>
+    <p><strong>Phone:</strong> <%= user.phone %></p>
+    <p><strong>Address:</strong> <%= order.shippingAddress %></p>
+  </div>
+
+  <table class="order-table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% order.items.forEach(item => { %>
+        <tr>
+          <td><%= item.name %></td>
+          <td><%= item.quantity %></td>
+          <td>৳ <%= item.price %></td>
+          <td>৳ <%= item.quantity * item.price %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <div class="total">
+    Grand Total: ৳ <%= order.totalAmount %>
+  </div>
+
+  <div class="footer">
+    <p>We will contact you soon for delivery 🚚</p>
+    <p>Need help? Contact us anytime.</p>
+  </div>
+
+</div>
+
+</body>
+</html>
