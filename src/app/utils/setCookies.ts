@@ -11,6 +11,7 @@ export const setCookieAuth = (res: Response, token: IToken) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
+      maxAge: 60 * 60 * 1000,
     });
   }
 
@@ -19,7 +20,7 @@ export const setCookieAuth = (res: Response, token: IToken) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      // maxAge: 7 * 24 * 60 * 60 * 1000, // this will not vanish even close the browser
+      maxAge: 7 * 24 * 60 * 60 * 1000, // this will not vanish even close the browser
     });
   }
 };

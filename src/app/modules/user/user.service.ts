@@ -17,7 +17,8 @@ const registerUser = async (payload: Partial<IUser>) => {
   const hashPass = await bcrypt.hash(payload.password as string, Number(envVar.BCRYPT_SALT_ROUND));
   payload.password = hashPass;
 
-  const user = await User.create(payload);
+  const createUser = await User.create(payload);
+   const { password, ...user } = createUser!.toObject();
   return user;
 };
 

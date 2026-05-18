@@ -13,7 +13,6 @@ import { sendEMail } from "../../utils/sendEMail";
 
 const credentialLogin = async (payload: Partial<IUser>) => {
   const { email, phone, password } = payload;
-  console.log(payload)
 
   if (!password) {
     throw new AppError(statusCode.FORBIDDEN, "Password field can't be empty.");
@@ -25,20 +24,22 @@ const credentialLogin = async (payload: Partial<IUser>) => {
   } else if (phone) {
     isExistUser = await checkUserStatus("", phone);
   }
-console.log(isExistUser)
-  const isPassMatch = await bcrypt.compare(password as string, isExistUser?.password as string);
+
+  const u = await User.findOne({ email }).select("+password");
+
+  const isPassMatch = await bcrypt.compare(password as string, u?.password as string);
   if (!isPassMatch) {
     throw new AppError(statusCode.UNAUTHORIZED, "Credential not matched!");
   }
   const userTokens = createUserToken(isExistUser!);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { password: pass, ...user } = isExistUser!.toObject();
+  // const { password: pass, ...user } = isExistUser!.toObject();
 
   return {
     accessToken: userTokens.accessToken,
     refreshToken: userTokens.refreshToken,
-    user,
+    user:isExistUser,
   };
 };
 
@@ -117,7 +118,7 @@ const forgotPassword = async (email: string) => {
     templateData: {
       name: isUserExist!.fullName,
       resetLink,
-      expiryTime:"10 Minutes"
+      expiryTime: "10 Minutes",
     },
   });
 };
