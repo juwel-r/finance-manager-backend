@@ -6,21 +6,15 @@ export enum ETransactionType {
   transfer = "transfer",
 }
 
-export enum ETransactionStatus {
-  posted = "posted",
-  pending = "pending",
-  cancelled = "cancelled",
-}
-
 export interface ITransaction {
   _id?: Types.ObjectId;
   userId: Types.ObjectId;
   type: ETransactionType;
   amount: number;
-  fromAccountId?: Types.ObjectId;
-  toAccountId?: Types.ObjectId;
+  sourceAccountId?: Types.ObjectId;
+  destinationAccountId?: Types.ObjectId;
   categoryId?: Types.ObjectId;
+  incomeSource?: string;
   note?: string;
   transactionDate: Date;
-  status: ETransactionStatus;
 }

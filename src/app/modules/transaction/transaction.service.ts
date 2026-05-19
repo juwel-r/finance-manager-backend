@@ -11,14 +11,14 @@ const createTransaction = async (payload: ITransaction) => {
   try {
     session.startTransaction();
 
-    const { type, amount, fromAccountId, toAccountId, userId } = payload;
+    const { type, amount, sourceAccountId, destinationAccountId, userId } = payload;
 
-    const fromAccount = fromAccountId
-      ? await Account.findOne({ _id: fromAccountId, userId, isArchived: false }).session(session)
+    const fromAccount = sourceAccountId
+      ? await Account.findOne({ _id: sourceAccountId, userId, isArchived: false }).session(session)
       : null;
 
-    const toAccount = toAccountId
-      ? await Account.findOne({ _id: toAccountId, userId, isArchived: false }).session(session)
+    const toAccount = destinationAccountId
+      ? await Account.findOne({ _id: destinationAccountId, userId, isArchived: false }).session(session)
       : null;
 
     if (type === ETransactionType.expense) {
@@ -85,11 +85,10 @@ const getSingleTransaction = async (id: string, userId: string) => {
 };
 
 const updateTransaction = async (id: string, userId: string, payload: Partial<ITransaction>) => {
-  const transaction = await Transaction.findOneAndUpdate(
-    { _id: id, userId },
-    payload,
-    { new: true, runValidators: true },
-  );
+  const transaction = await Transaction.findOneAndUpdate({ _id: id, userId }, payload, {
+    new: true,
+    runValidators: true,
+  });
 
   if (!transaction) {
     throw new AppError(statusCode.NOT_FOUND, "Transaction not found.");

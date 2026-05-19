@@ -1,110 +1,81 @@
 import z from "zod";
-import { ETransactionStatus, ETransactionType } from "./transaction.interface";
+import { ETransactionType } from "./transaction.interface";
 
 const baseTransactionZod = z.object({
-  type: z.enum([
-    ETransactionType.income,
-    ETransactionType.expense,
-    ETransactionType.transfer,
-  ]),
+  type: z.enum([ETransactionType.income, ETransactionType.expense, ETransactionType.transfer]),
 
   amount: z.number({ message: "Amount must be number." }).positive({
     message: "Amount must be greater than 0.",
   }),
 
-  fromAccountId: z.string().optional(),
-  toAccountId: z.string().optional(),
+  sourceAccountId: z.string().optional(),
+  destinationAccountId: z.string().optional(),
   categoryId: z.string().optional(),
-
+  incomeSource: z.string().optional(),
   note: z.string().optional(),
   transactionDate: z.coerce.date().optional(),
-
-  status: z.enum([
-    ETransactionStatus.posted,
-    ETransactionStatus.pending,
-    ETransactionStatus.cancelled,
-  ]).optional(),
 });
 
 export const createTransactionZod = baseTransactionZod.superRefine((data, ctx) => {
   if (data.type === ETransactionType.expense) {
-    if (!data.fromAccountId) {
+    if (!data.sourceAccountId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["fromAccountId"],
-        message: "fromAccountId is required for expense.",
+        path: ["sourceAccountId"],
+        message: "Source is required to add expense.",
       });
     }
     if (!data.categoryId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["categoryId"],
-        message: "categoryId is required for expense.",
+        message: "Category is required to add expense.",
       });
     }
   }
 
   if (data.type === ETransactionType.income) {
-    if (!data.toAccountId) {
+    if (!data.destinationAccountId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["toAccountId"],
-        message: "toAccountId is required for income.",
+        path: ["destinationAccountId"],
+        message: "Destination is required to add income.",
       });
     }
-    if (!data.categoryId) {
+    if (!data.incomeSource) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["categoryId"],
-        message: "categoryId is required for income.",
+        path: ["incomeSource"],
+        message: "Income source is required to add income.",
       });
     }
   }
 
   if (data.type === ETransactionType.transfer) {
-    if (!data.fromAccountId) {
+    if (!data.sourceAccountId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["fromAccountId"],
-        message: "fromAccountId is required for transfer.",
+        path: ["sourceAccountId"],
+        message: "sourceAccountId is required for transfer.",
       });
     }
-    if (!data.toAccountId) {
+    if (!data.destinationAccountId) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ["toAccountId"],
-        message: "toAccountId is required for transfer.",
-      });
-    }
-    if (data.categoryId) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["categoryId"],
-        message: "categoryId should not be used for transfer.",
+        path: ["destinationAccountId"],
+        message: "destinationAccountId is required for transfer.",
       });
     }
   }
 });
 
 export const updateTransactionZod = z.object({
-  type: z.enum([
-    ETransactionType.income,
-    ETransactionType.expense,
-    ETransactionType.transfer,
-  ]).optional(),
-
+  type: z.enum([ETransactionType.income, ETransactionType.expense, ETransactionType.transfer]).optional(),
   amount: z.number({ message: "Amount must be number." }).positive().optional(),
-
-  fromAccountId: z.string().optional(),
-  toAccountId: z.string().optional(),
+  sourceAccountId: z.string().optional(),
+  destinationAccountId: z.string().optional(),
   categoryId: z.string().optional(),
-
+  incomeSource: z.string().optional(),
   note: z.string().optional(),
   transactionDate: z.coerce.date().optional(),
-
-  status: z.enum([
-    ETransactionStatus.posted,
-    ETransactionStatus.pending,
-    ETransactionStatus.cancelled,
-  ]).optional(),
 });
