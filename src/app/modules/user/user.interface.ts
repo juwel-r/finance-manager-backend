@@ -2,6 +2,7 @@ import type { Types, Document } from "mongoose";
 
 export enum ERole {
   admin = "admin",
+  subAdmin = "subAdmin",
   user = "user",
 }
 

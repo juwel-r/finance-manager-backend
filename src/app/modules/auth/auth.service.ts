@@ -86,7 +86,8 @@ const changePassword = async (newPassword: string, oldPassword: string, decodedT
 };
 
 const setPassword = async (userId: string, password: string) => {
-  const user = await checkUserStatus("", "", userId);
+  await checkUserStatus("", "", userId);
+  const user = await User.findById(userId).select("+password");
 
   if (user!.password) {
     throw new AppError(statusCode.BAD_REQUEST, "You have already set your password.");

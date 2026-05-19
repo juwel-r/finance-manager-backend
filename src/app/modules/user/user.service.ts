@@ -1,7 +1,7 @@
 import { User } from "./user.model";
 import AppError from "../../errorHelpers/AppError";
 import { statusCode } from "../../utils/statusCode";
-import type { IUser } from "./user.interface";
+import type { IAuthProvider, IUser } from "./user.interface";
 import bcrypt from "bcryptjs";
 import { envVar } from "../../config/env.config";
 import { generateToken } from "../../utils/jwt";
@@ -24,25 +24,24 @@ const registerUser = async (payload: Partial<IUser>) => {
     );
 
     if (existingUser) {
-      throw new AppError(statusCode.BAD_REQUEST, "User already exists.");
+      throw new AppError(statusCode.BAD_REQUEST, "Email or Phone number is already registered.");
     }
 
-    const hashPass = await bcrypt.hash(
-      payload.password as string,
-      Number(envVar.BCRYPT_SALT_ROUND),
-    );
+    const hashPass = await bcrypt.hash(payload.password as string, Number(envVar.BCRYPT_SALT_ROUND));
 
     payload.password = hashPass;
+    payload.auths = [
+      {
+        provider: "credential",
+        providerId: payload.email as string,
+      },
+    ];
 
     const createdUsers = await User.create([payload], { session });
 
     const createUser = createdUsers[0];
 
-    const verificationToken = generateToken(
-      { uid: createUser!._id.toString() },
-      envVar.JWT_ACCESS_SECRET,
-      "1d",
-    );
+    const verificationToken = generateToken({ uid: createUser!._id.toString() }, envVar.JWT_ACCESS_SECRET, "1d");
 
     const verificationLink = `${envVar.FRONTEND_URL}/verify-email?token=${verificationToken}`;
 
@@ -106,9 +105,7 @@ const updateUser = async (id: string, payload: Partial<IUser>) => {
 };
 
 const deleteUser = async (id: string) => {
-  const user = await User.findOneAndUpdate({ _id: id, isDeleted: false }, { isDeleted: true }, { new: true }).select(
-    "-password",
-  );
+  const user = await User.findOneAndUpdate({ _id: id, isDeleted: false }, { isDeleted: true }, { new: true }).select("-password");
 
   if (!user) {
     throw new AppError(statusCode.NOT_FOUND, "User not found.");
