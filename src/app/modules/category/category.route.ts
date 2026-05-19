@@ -7,36 +7,14 @@ import { createCategoryZod, updateCategoryZod } from "./category.validation";
 
 const router = Router();
 
-router.post(
-  "/create",
-  checkAuth(...Object.values(ERole)),
-  zodValidation(createCategoryZod),
-  CategoryController.createCategory,
-);
+router.post("/create", checkAuth(...Object.values(ERole)), zodValidation(createCategoryZod), CategoryController.createCategory);
 
-router.get(
-  "/my-categories",
-  checkAuth(...Object.values(ERole)),
-  CategoryController.getMyCategories,
-);
+router.get("/my-categories", checkAuth(...Object.values(ERole)), CategoryController.getMyCategories);
 
-router.get(
-  "/:id",
-  checkAuth(...Object.values(ERole)),
-  CategoryController.getSingleCategory,
-);
+router.get("/:id", checkAuth(...Object.values(ERole)), CategoryController.getSingleCategory);
 
-router.patch(
-  "/:id",
-  checkAuth(...Object.values(ERole)),
-  zodValidation(updateCategoryZod),
-  CategoryController.updateCategory,
-);
+router.patch("/:id", checkAuth(...Object.values(ERole)), zodValidation(updateCategoryZod), CategoryController.updateCategory);
 
-router.patch(
-  "/archive/:id",
-  checkAuth(...Object.values(ERole)),
-  CategoryController.archiveCategory,
-);
+router.patch("/archive/:id", checkAuth(...Object.values(ERole)), CategoryController.archiveCategory);
 
 export const CategoryRouter = router;

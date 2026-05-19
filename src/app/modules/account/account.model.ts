@@ -5,11 +5,11 @@ const accountSchema = new Schema<IAccount>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     name: { type: String, required: true, trim: true },
-    type: { type: String, enum: Object.values(EAccountType), default: EAccountType.cash },
-    currency: { type: String, default: "BDT", trim: true },
+    type: { type: String, enum: Object.values(EAccountType)},
     openingBalance: { type: Number, default: 0 },
     currentBalance: { type: Number, default: 0 },
     isArchived: { type: Boolean, default: false },
+    isDefault: { type: Boolean, default: false },
   },
   {
     versionKey: false,
