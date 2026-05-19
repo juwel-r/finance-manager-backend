@@ -8,7 +8,7 @@ export const checkUserStatus = async (
   email?: string,
   phone?: string,
   id?: string,
-):IUser<Promise> => {
+) => {
   let isUserExist;
 
   // const user = await User.findOne({
@@ -20,7 +20,7 @@ export const checkUserStatus = async (
   // });
 
   if (email) {
-    isUserExist = await User.findOne({ email }).select("+password");;
+    isUserExist = await User.findOne({ email });
     if (!isUserExist) {
       throw new AppError(
         statusCode.NOT_FOUND,
@@ -28,7 +28,7 @@ export const checkUserStatus = async (
       );
     }
   } else if (phone) {
-    isUserExist = await User.findOne({ phone }).select("+password");;
+    isUserExist = await User.findOne({ phone });
     if (!isUserExist) {
       throw new AppError(
         statusCode.NOT_FOUND,

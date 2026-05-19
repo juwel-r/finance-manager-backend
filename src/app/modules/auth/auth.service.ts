@@ -43,12 +43,12 @@ const credentialLogin = async (payload: Partial<IUser>) => {
   const userTokens = createUserToken(isExistUser!);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // const { password: pass, ...user } = isExistUser.toObject();
+  // const { password: pass, ...user } = isExistUser!.toObject();
 
   return {
     accessToken: userTokens.accessToken,
     refreshToken: userTokens.refreshToken,
-    user: isExistUser,
+    user:isExistUser
   };
 };
 
