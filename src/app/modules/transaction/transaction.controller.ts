@@ -3,6 +3,7 @@ import { catchAsync } from "../../utils/catchAsync";
 import { statusCode } from "../../utils/statusCode";
 import { TransactionServices } from "./transaction.service";
 import { sendRes } from "../../utils/sendResponse";
+import type { ETransactionType } from "./transaction.interface";
 
 const createTransaction = catchAsync(async (req: Request, res: Response) => {
   const result = await TransactionServices.createTransaction({
@@ -41,6 +42,19 @@ const getSingleTransaction = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getTransactionsByType = catchAsync(async (req: Request, res: Response) => {
+  const { type } = req.query;
+  const userId = req.user.uid;
+  const result = await TransactionServices.getTransactionsByType(userId as string, type as ETransactionType);
+
+  sendRes(res, {
+    statusCode: statusCode.OK,
+    success: true,
+    message: "Transaction fetched successfully.",
+    data: result,
+  });
+});
+
 const updateTransaction = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const payload = req.body;
@@ -70,6 +84,7 @@ export const TransactionController = {
   createTransaction,
   getMyTransactions,
   getSingleTransaction,
+  getTransactionsByType,
   updateTransaction,
   deleteTransaction,
 };

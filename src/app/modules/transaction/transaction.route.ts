@@ -7,36 +7,17 @@ import { createTransactionZod, updateTransactionZod } from "./transaction.valida
 
 const router = Router();
 
-router.post(
-  "/create",
-  checkAuth(...Object.values(ERole)),
-  zodValidation(createTransactionZod),
-  TransactionController.createTransaction,
-);
+router.post("/create", checkAuth(...Object.values(ERole)), zodValidation(createTransactionZod), TransactionController.createTransaction);
 
-router.get(
-  "/my-transactions",
-  checkAuth(...Object.values(ERole)),
-  TransactionController.getMyTransactions,
-);
+router.get("/my-transactions", checkAuth(...Object.values(ERole)), TransactionController.getMyTransactions);
 
-router.get(
-  "/:id",
-  checkAuth(...Object.values(ERole)),
-  TransactionController.getSingleTransaction,
-);
+router.get("/type", checkAuth(...Object.values(ERole)), TransactionController.getTransactionsByType);
 
-router.patch(
-  "/:id",
-  checkAuth(...Object.values(ERole)),
-  zodValidation(updateTransactionZod),
-  TransactionController.updateTransaction,
-);
+router.get("/:id", checkAuth(...Object.values(ERole)), TransactionController.getSingleTransaction);
 
-router.delete(
-  "/:id",
-  checkAuth(...Object.values(ERole)),
-  TransactionController.deleteTransaction,
-);
+
+router.patch("/:id", checkAuth(...Object.values(ERole)), zodValidation(updateTransactionZod), TransactionController.updateTransaction);
+
+router.delete("/:id", checkAuth(...Object.values(ERole)), TransactionController.deleteTransaction);
 
 export const TransactionRouter = router;
