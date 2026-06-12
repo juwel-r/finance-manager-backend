@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import  { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { statusCode } from "../../utils/statusCode";
 import { TransactionServices } from "./transaction.service";

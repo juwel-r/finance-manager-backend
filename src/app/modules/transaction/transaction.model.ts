@@ -22,23 +22,21 @@ const transactionSchema = new Schema<ITransaction>(
 transactionSchema.index({ userId: 1, transactionDate: -1 });
 transactionSchema.index({ userId: 1, type: 1 });
 
-transactionSchema.pre("validate", function (next: any) {
+transactionSchema.pre("validate", function () {
   if (this.type === ETransactionType.expense) {
-    if (!this.sourceAccountId) return next(new Error("Source is required to add expense."));
-    if (!this.categoryId) return next(new Error("Category is required to add expense."));
+    if (!this.sourceAccountId) throw new Error("Source is required to add expense.");
+    if (!this.categoryId) throw new Error("Category is required to add expense.");
   }
 
   if (this.type === ETransactionType.income) {
-    if (!this.destinationAccountId) return next(new Error("Destination is required to add income."));
-    if (!this.incomeSource) return next(new Error("Income source is required to add income."));
+    if (!this.destinationAccountId) throw new Error("Destination is required to add income.");
+    if (!this.incomeSource) throw new Error("Income source is required to add income.");
   }
 
   if (this.type === ETransactionType.transfer) {
-    if (!this.sourceAccountId) return next(new Error("Source is required for transfer."));
-    if (!this.destinationAccountId) return next(new Error("Destination is required for transfer."));
+    if (!this.sourceAccountId) throw new Error("Source is required for transfer.");
+    if (!this.destinationAccountId) throw new Error("Destination is required for transfer.");
   }
-
-  next();
 });
 
 export const Transaction = model<ITransaction>("Transaction", transactionSchema);

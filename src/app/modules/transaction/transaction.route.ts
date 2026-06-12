@@ -15,7 +15,6 @@ router.get("/type", checkAuth(...Object.values(ERole)), TransactionController.ge
 
 router.get("/:id", checkAuth(...Object.values(ERole)), TransactionController.getSingleTransaction);
 
-
 router.patch("/:id", checkAuth(...Object.values(ERole)), zodValidation(updateTransactionZod), TransactionController.updateTransaction);
 
 router.delete("/:id", checkAuth(...Object.values(ERole)), TransactionController.deleteTransaction);

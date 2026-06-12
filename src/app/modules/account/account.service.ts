@@ -15,6 +15,9 @@ const createAccount = async (payload: IAccount) => {
       await Account.findOneAndUpdate({ isDefault: true }, { isDefault: false });
     }
   }
+  if (!payload.currentBalance) {
+    payload.currentBalance = payload.openingBalance;
+  }
 
   const account = await Account.create(payload);
   return account;
